@@ -1,8 +1,8 @@
-RoleSwitch is a simple application built with Laravel. It is a frontend for the OpenAI LLM. 
-## Some of it's features:
+# Testing
 
-* User Registration and Authentication: Users can register and log into the application.
+Run test_script.sql in your database of choice(preferably mysql) for example usage.  
 
-* Chat Functionality: Users can interact with an OpenAI model, sending messages and receiving responses. It also features a basic TTS mode.
+Install `php` and `composer`. I also recommend installing `myphpadmin` for db-management.
+cd into project directory and run `php artisan serve`  
 
-* Role Management: Users can add, delete, and edit roles (prompts). 
+Access the server in your browser and enjoy :D
