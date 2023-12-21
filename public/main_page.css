@@ -11,10 +11,15 @@
     flex-direction: column;
     background-color: #00000076;
 }
-
+.restaurants {
+    border: 2px solid #0F4C5F;
+    padding: 10px;
+    border-radius: 8px;
+}
 .restaurant-card:hover{
     cursor: pointer;
-    background-color: antiquewhite;
+    background-color: #fafff4;
+    border-radius: 8px;
 }
 
 .review-card{
@@ -22,3 +27,12 @@
     margin-bottom: 1rem;
 }
 
+.bold-text {
+    font-weight: bold;
+}
+.horizontal-line {
+    border: 0;
+    height: 1px;
+    background-color: #0F4C5F; 
+    margin: 10px 0;
+}

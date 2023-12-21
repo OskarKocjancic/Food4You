@@ -15,7 +15,7 @@
             </div>
             <div class="col-md-9">
                 <div id="search-bar">
-                    <div class="text" style="font-family: 'Josefin Sans', sans-serif;">Find restaurants with meals for your special diet!</div>
+                    <div class="bold-text" style="font-family: 'Josefin Sans', sans-serif;">Find restaurants with meals for your special diet!</div>
                     <div class="input-group mb-3 mt-3">
                         <input type="text" class="form-control" placeholder="Search for restaurants"
                             aria-label="Search for restaurants" aria-describedby="button-addon2">
@@ -48,7 +48,7 @@
                     </form>
 
                     <button id="close-button" class="btn btn-primary"
-                        onclick="this.parentNode.style.display = 'none'">Exit</button>
+                        onclick="this.parentNode.style.display = 'none'" style="background-color: #0F4C5F; border-color:#0F4C5F">Exit</button>
 
                 </div>
             </div>
@@ -79,8 +79,9 @@
                         let restaurantDiv = document.createElement("div");
                         restaurantDiv.classList.add("restaurant-card");
                         restaurantDiv.innerHTML = `
-                            <div class="restaurant-name">${restaurant.name}</div>
+                            <div class="bold-text" >${restaurant.name}</div>
                             <div class="restaurant-score">${restaurant.rating}</div>
+                            <hr class="horizontal-line">
                         `;
 
                         restaurantDiv.addEventListener("click", () => {
