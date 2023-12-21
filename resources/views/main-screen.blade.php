@@ -6,44 +6,53 @@
     <link rel="stylesheet" href="<?php echo asset('main_page.css'); ?>" type="text/css">
 
 
-    <div class="container col-6 mt-3 ">
-        <div id="search-bar">
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Search for restaurants"
-                    aria-label="Search for restaurants" aria-describedby="button-addon2">
 
+    <div class="container mt-3">
+        <div class="row align-items-center">
+            <div class="col-md-3 d-none d-md-block">
+                <!-- Add the logo only on medium screens and above -->
+                <img src="{{ asset('images/logo.png') }}" class="img-fluid d-md-block" alt="Logo">
+            </div>
+            <div class="col-md-9">
+                <div id="search-bar">
+                    <div class="text" style="font-family: 'Josefin Sans', sans-serif;">Find restaurants with meals for your special diet!</div>
+                    <div class="input-group mb-3 mt-3">
+                        <input type="text" class="form-control" placeholder="Search for restaurants"
+                            aria-label="Search for restaurants" aria-describedby="button-addon2">
+                    </div>
+                </div>
+                <div class="restaurants">
+                    {{-- when updating this also update in the  --}}
+                    <div class="restaurant-card"></div>
+                </div>
+
+                <div class="review-overlay p-4">
+                    <div class="review-card-container col-6">
+                    </div>
+                    <h1>Leave a review:</h1>
+                    <form class="review-form col-6" action="/add-review" method="GET">
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Title">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlTextarea1" class="form-label">Review</label>
+                            <textarea class="form-control" name="text" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleFormControlInput1" class="form-label">Rating</label>
+                            <input type="number" class="form-control" name="rating" placeholder="Rating">
+                        </div>
+                        <input type="hidden" name="id">
+                        <input class="btn btn-secondary" type="submit" value="Leave review">
+                    </form>
+
+                    <button id="close-button" class="btn btn-primary"
+                        onclick="this.parentNode.style.display = 'none'">Exit</button>
+
+                </div>
             </div>
         </div>
-        <div class="restaurants">
-            {{-- when updating this also update in the  --}}
-            <div class="restaurant-card"></div>
-        </div>
-
-        <div class="review-overlay p-4">
-            <div class="review-card-container col-6">
-            </div>
-            <h1>Leave a review:</h1>
-            <form class="review-form col-6" action="/add-review" method="GET">
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Title</label>
-                    <input type="text" class="form-control" name="title" placeholder="Title">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Review</label>
-                    <textarea class="form-control" name="text" rows="3"></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Rating</label>
-                    <input type="number" class="form-control" name="rating" placeholder="Rating">
-                </div>
-                <input type="hidden" name="id">
-                <input class="btn btn-secondary" type="submit" value="Leave review">
-            </form>
-
-            <button id="close-button" class="btn btn-primary" onclick="this.parentNode.style.display = 'none'">Exit</button>
-
-        </div>
-
     </div>
 
 

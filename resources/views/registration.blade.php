@@ -1,7 +1,5 @@
 @extends('layout-login')
-
 @section('header-title', 'Registration')
-
 @section('title', 'Registration page')
 @section('content')
 
@@ -22,17 +20,24 @@
     @if (session()->has('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
-
-    <form action="{{ route('registration.post') }}" method="POST" class="m-sm-auto" style="width: 500px;">
-        @csrf
-        <div class="mb-3">
-            <label class="form-label">Username</label>
-            <input type="text" class="form-control" name="username">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 m-sm-auto">
+                <form action="{{ route('registration.post') }}" method="POST" class="m-sm-auto" style="width: 100%;">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password">
+                    </div>
+            
+                    <button type="submit" class="btn btn-primary" style="background-color: #0F4C5F; border-color:#0F4C5F">Submit</button>
+                </form>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" class="form-control" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
+    
 @endsection
