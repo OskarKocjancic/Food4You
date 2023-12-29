@@ -1,14 +1,14 @@
-INSERT INTO restaurants (name, address, phone, rating, created_at, updated_at) VALUES
-('The Gourmet Spoon', '123 Main St', '555-555-5555', 5, NOW(), NOW()),
-('Maple Delights', '456 Maple Ave', '555-555-5556', 4, NOW(), NOW()),
-('Oak Bistro', '789 Oak Dr', '555-555-5557', 3, NOW(), NOW()),
-('Elm Street Diner', '321 Elm St', '555-555-5558', 2, NOW(), NOW()),
-('Pine Avenue Grill', '654 Pine Ave', '555-555-5559', 5, NOW(), NOW()),
-('Maple Drive Eatery', '987 Maple Dr', '555-555-5560', 4, NOW(), NOW()),
-('Elm Street Cafe', '135 Elm St', '555-555-5561', 3, NOW(), NOW()),
-('Pine Avenue Bistro', '246 Pine Ave', '555-555-5562', 2, NOW(), NOW()),
-('Maple Drive Diner', '864 Maple Dr', '555-555-5563', 5, NOW(), NOW()),
-('Elm Street Grill', '579 Elm St', '555-555-5564', 4, NOW(), NOW());
+INSERT INTO restaurants (name, address, phone, rating, price, vegan, vegetarian, halal, kosher, glutenFree, studentDiscount, created_at, updated_at) VALUES
+('The Gourmet Spoon', '123 Main St', '555-555-5555', 5, 2, 1.0, 0.0, 0.0, 0.0, 1.0, 1.0, NOW(), NOW()),
+('Maple Delights', '456 Maple Ave', '555-555-5556', 4, 2, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, NOW(), NOW()),
+('Oak Bistro', '789 Oak Dr', '555-555-5557', 3, 2, 0.0, 1.0, 1.0, 0.0, 1.0, 1.0, NOW(), NOW()),
+('Elm Street Diner', '321 Elm St', '555-555-5558', 2, 2, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, NOW(), NOW()),
+('Pine Avenue Grill', '654 Pine Ave', '555-555-5559', 5, 2, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, NOW(), NOW()),
+('Maple Drive Eatery', '987 Maple Dr', '555-555-5560', 4, 2, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, NOW(), NOW()),
+('Elm Street Cafe', '135 Elm St', '555-555-5561', 3, 2, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, NOW(), NOW()),
+('Pine Avenue Bistro', '246 Pine Ave', '555-555-5562', 2, 2, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, NOW(), NOW()),
+('Maple Drive Diner', '864 Maple Dr', '555-555-5563', 5, 2, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, NOW(), NOW()),
+('Elm Street Grill', '579 Elm St', '555-555-5564', 4, 2, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0, NOW(), NOW());
 
 
 INSERT INTO reviews (user_id, restaurant_id, text, title, rating, created_at, updated_at) VALUES

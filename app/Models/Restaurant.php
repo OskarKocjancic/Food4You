@@ -13,7 +13,14 @@ class Restaurant extends Model
         'name',
         'address',
         'phone',
-        'rating'
+        'rating',
+        'price',
+        'vegan',
+        'vegetarian',
+        'halal',
+        'kosher',
+        'glutenFree',
+        'studentDiscount'
     ];
     public function reviews()
     {

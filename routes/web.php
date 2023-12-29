@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AuthManager;
 use App\Http\Controllers\ChatGptController;
-use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RestaurantController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -57,7 +57,7 @@ Route::post(
 Route::match(['get', 'post'], // Modify the route definition to support both POST and GET methods
     '/add-review',
     [
-        ReviewController::class,
+        RestaurantController::class,
         'addReview'
     ]
 )->name('add-review.post');
@@ -65,14 +65,17 @@ Route::match(['get', 'post'], // Modify the route definition to support both POS
 Route::post(
     '/get-restaurants',
     [
-        ReviewController::class,
+        RestaurantController::class,
         'getRestaurants'
     ]
 )->name('get-restaurants.post');
+
+Route::get('/restaurant-count', [RestaurantController::class, 'getNumberOfRestaurants'])->name('restaurant-count.get');
+
 Route::post(
     '/get-reviews',
     [
-        ReviewController::class,
+        RestaurantController::class,
         'getReviews'
     ]
 )->name('get-reviews.post');
