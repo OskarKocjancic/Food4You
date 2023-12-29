@@ -5,9 +5,7 @@ body {
 }
 
 section {
-    transition: all 0.2s ease-in-out;
 }
-
 .review-overlay {
     position: absolute;
     top: 0;
@@ -20,6 +18,9 @@ section {
     justify-content: flex-start;
     flex-direction: column;
     background-color: #f2f2f2;
+}
+.review-overlay>.row {
+    flex: 1;
 }
 
 .restaurant-overlay {
@@ -46,6 +47,4 @@ section {
     margin-bottom: 1rem;
 }
 
-#restaurants{
-    background-color: #f2f2f2;
-}
+#restaurants {}

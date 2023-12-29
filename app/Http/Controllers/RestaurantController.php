@@ -35,18 +35,16 @@ class RestaurantController extends BaseController
         $kosher = $request->input('kosher');
         $glutenFree = $request->input('glutenFree');
         $studentDiscount = $request->input('studentDiscount');
-        if ($price1 == "true")
-            $price1 = 1;
-        else
-            $price1 = 0;
+
         $restaurants = Restaurant::where('name', 'LIKE', '%' . $restaurantName . '%');
 
-        $tmp = collect();
+        $tmp = Restaurant::where('name', 'LIKE', '%skdfdfgmlsmlkdg%');
+        $i = 1;
         foreach (array($price1, $price2, $price3) as $price) {
 
             if ($price)
-                $tmp = $tmp->union($restaurants->where('price', '=', $price));
-
+                $tmp = $tmp->union($restaurants->where('price', '=', $i));
+            $i++;
         }
         if ($tmp->count() > 0)
             $restaurants = $tmp;

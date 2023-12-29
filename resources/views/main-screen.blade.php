@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+
     <div class="container-fluid ">
         <div class="row">
-            <section class="d-inline-block p-3 col-12" id="top-rated">
+            <section class="p-3 col-12 collapse show" id="top-rated">
                 <div class="card">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div class="card-body-title">Top rated restaurants</div>
@@ -66,8 +70,8 @@
 
             </section>
         </div>
-        <div class="row ">
-            <section class="d-inline-block p-3 col-2 " id="filters">
+        <div class="row justify-content-center">
+            <section class="p-3 col-2 collapse" id="filters">
                 <div class="filter mb-3">
                     <div class="filter-title">Price</div>
                     <div class="row filter-content ">
@@ -161,13 +165,12 @@
                     </div>
                 </div>
                 <div class="filter">
-                    <button class="btn btn-primary"
-                        onclick="getRestaurants(document.querySelector('#search-bar-input').value)">Apply Filters</button>
+                    <button id="filter-apply-button" class="btn btn-primary">Apply Filters</button>
                 </div>
             </section>
 
 
-            <section class="d-inline-block p-3 col-8 " id="restaurant-finder">
+            <section class="p-3 col-9" id="restaurant-finder">
                 <div class="col-12" id="search-bar">
                     <div class="input-group">
                         <input type="text" class="form-control" id="search-bar-input"
@@ -189,35 +192,42 @@
     </div>
 
     <div class="review-overlay p-4">
-        <h1>Leave a review:</h1>
-        <form class="review-form col-6" action="/add-review" method="GET">
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Title</label>
-                <input type="text" class="form-control" name="title" placeholder="Title">
-            </div>
-            <div class="mb-3">
-                <label for="exampleFormControlTextarea1" class="form-label">Review</label>
-                <textarea class="form-control" name="text" rows="3"></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="exampleFormControlInput1" class="form-label">Rating</label>
-                <input type="number" class="form-control" name="rating" placeholder="Rating">
-            </div>
-            <input type="hidden" name="id">
-            <div class="input-group">
+
+        <div class="row w-100">
+            <form class="col-6 d-flex flex-column justify-content-center align-content-center" id="review-form"
+                action="/add-review" method="GET">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Title</label>
+                    <input type="text" class="form-control" name="title" placeholder="Title">
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlTextarea1" class="form-label">Review</label>
+                    <textarea class="form-control" name="text" rows="3"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Rating</label>
+                    <input type="number" class="form-control" name="rating" placeholder="Rating">
+                </div>
+                <input type="hidden" name="id">
+                <div class="input-group">
+
+                </div>
+                <input class="btn btn-secondary" type="submit" value="Leave review">
+            </form>
+            <div class="col-6" id="review-card-container">
 
             </div>
-            <input class="btn btn-secondary" type="submit" value="Leave review">
-        </form>
-        <button id="close-button" class="btn btn-primary" onclick="this.parentNode.style.display = 'none'">Exit</button>
-        <div class="review-card-container col-6">
         </div>
+        <button id="close-button" class="btn btn-primary" onclick="this.parentNode.style.display = 'none'">Exit</button>
 
     </div>
 
     <script>
-        const RESTAURANTS_PER_PAGE = 5;
+        const RESTAURANTS_PER_PAGE = 6;
+        
 
+
+        
         function createRestaurantDiv(restaurant) {
             document.createElement("div");
             let restaurantDiv = document.createElement("div");
@@ -248,7 +258,7 @@
                             ".review-overlay");
                         reviewOverlay.style.display = "flex";
                         let reviewsDiv = document.querySelector(
-                            ".review-card-container");
+                            "#review-card-container");
 
                         reviewsDiv.innerHTML = "";
                         document.querySelector("input[name='id']").value =
@@ -303,8 +313,8 @@
             return restaurantDiv;
         }
 
-        function getRestaurants(query, from = 0, to = RESTAURANTS_PER_PAGE) {
-            fetch('/get-restaurants', {
+        async function getRestaurants(query, from = 0, to = RESTAURANTS_PER_PAGE) {
+            return await fetch('/get-restaurants', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -332,13 +342,15 @@
                     console.log(data);
                     let restaurantsDiv = document.querySelector("#restaurants");
                     restaurantsDiv.innerHTML = "";
-
-                    generatePagination(data.length);
-                    console.log(data.length);
+                    let i = 0;
                     data.forEach(restaurant => {
+                        if (to == -1 && i >= RESTAURANTS_PER_PAGE) return;
                         let restaurantDiv = createRestaurantDiv(restaurant);
                         restaurantsDiv.appendChild(restaurantDiv);
+                        i++;
+
                     });
+                    return data;
                 });
 
 
@@ -348,7 +360,7 @@
         function generatePagination(numberOfRestaurants, restaurantsPerPage = RESTAURANTS_PER_PAGE) {
             let paginationDiv = document.querySelector("#pagination");
             paginationDiv.innerHTML = "";
-            for (let i = 0; i <= numberOfRestaurants; i += restaurantsPerPage) {
+            for (let i = 0; i < numberOfRestaurants; i += restaurantsPerPage) {
                 let pageButton = document.createElement("button");
                 pageButton.classList.add("page");
                 pageButton.classList.add("btn");
@@ -356,7 +368,7 @@
                 console.log(i);
                 pageButton.innerHTML = i / restaurantsPerPage + 1;
                 pageButton.addEventListener("click", () => {
-                    getRestaurants(document.querySelector("#search-bar-input").value, i, i + restaurantsPerPage);
+                    getRestaurants(document.querySelector("#search-bar-input").value, i, restaurantsPerPage);
                 });
                 paginationDiv.appendChild(pageButton);
             }
@@ -367,16 +379,28 @@
 
         let searchBar = document.querySelector("#search-bar-input");
         let filters = document.querySelector("#filters");
+        let filterButton = document.querySelector("#filter-apply-button");
         let topRated = document.querySelector("#top-rated");
+        filterButton.addEventListener("click", () => {
+            (async () => {
+                let restaurants = await getRestaurants(searchBar.value, 0, -1);
+                generatePagination(restaurants.length);
+            })();
+        });
         searchBar.addEventListener("input", (e) => {
             if (searchBar.value == "") {
-                topRated.classList.remove("d-none");
+                $("#filters").collapse("hide");
+                $("#top-rated").collapse("show");
+
                 document.querySelector("#pagination").innerHTML = "";
                 document.querySelector("#restaurants").innerHTML = "";
             } else {
-                getRestaurants(e.target.value);
-                topRated.classList.add("d-none");
-
+                (async () => {
+                    let restaurants = await getRestaurants(e.target.value, 0, -1);
+                    generatePagination(restaurants.length);
+                })();
+                $("#filters").collapse("show");
+                $("#top-rated").collapse("hide");
             }
         });
     </script>
