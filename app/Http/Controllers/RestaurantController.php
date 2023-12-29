@@ -90,6 +90,18 @@ class RestaurantController extends BaseController
 
         return response()->json($reviews);
     }
+    public function getReviewsApi(Request $request)
+    {
+        $restaurantApiId = $request->input('api_id');
+
+        $reviews = Review::where('api_id', $restaurantApiId)->get();
+
+        foreach ($reviews as $review) {
+            $review->username = $review->user->username;
+        }
+
+        return response()->json($reviews);
+    }
     public function addReview(Request $request)
     {
         $review = new Review();
@@ -98,11 +110,41 @@ class RestaurantController extends BaseController
         $review->text = $request->input('text');
         $review->title = $request->input('title');
         $review->rating = $request->input('rating');
+        $review->vegan = boolval($request->input('vegan'));
+        $review->vegetarian = boolval($request->input('vegetarian'));
+        $review->halal = boolval($request->input('halal'));
+        $review->kosher = boolval($request->input('kosher'));
+        $review->glutenFree = boolval($request->input('glutenFree'));
+        $review->studentDiscount = boolval($request->input('studentDiscount'));
+
         $review->save();
-        $this->calculateRating($request);
+        $this->calculateScore($request);
 
         return back();
         // return response()->json($review);
+    }
+    public function addRestaurantIfAbsent(Request $request)
+    {
+        error_log($request->input('api_id'));
+        $restaurant = Restaurant::where('api_id', $request->input('api_id'))->first();
+        if ($restaurant) {
+            return response()->json($restaurant);
+        }
+        $restaurant = new Restaurant();
+        $restaurant->api_id = intval($request->input('api_id'));
+        $restaurant->name = strval($request->input('name'));
+        $restaurant->address = strval($request->input('address'));
+        $restaurant->phone = '';
+        $restaurant->rating = 0;
+        $restaurant->price = 1;
+        $restaurant->vegan = 0;
+        $restaurant->vegetarian = 0;
+        $restaurant->halal = 0;
+        $restaurant->kosher = 0;
+        $restaurant->glutenFree = 0;
+        $restaurant->studentDiscount = 0;
+        $restaurant->save();
+        return response()->json($restaurant);
     }
     public function calculateRating(Request $request)
     {
@@ -117,6 +159,68 @@ class RestaurantController extends BaseController
         $restaurant->rating = $rating;
         $restaurant->save();
 
+    }
+    public function calculateScore(Request $request)
+    {
+        $restaurantId = $request->input('id');
+        $reviews = Review::where('restaurant_id', $restaurantId)->get();
+
+        $score = [
+            'vegan' => 0,
+            'vegetarian' => 0,
+            'halal' => 0,
+            'kosher' => 0,
+            'glutenFree' => 0,
+            'studentDiscount' => 0,
+
+        ];
+
+        $sum = [
+            'vegan' => 0,
+            'vegetarian' => 0,
+            'halal' => 0,
+            'kosher' => 0,
+            'glutenFree' => 0,
+            'studentDiscount' => 0,
+
+        ];
+
+        foreach ($reviews as $review) {
+
+            if ($review->vegan) {
+                $score['vegan']++;
+                $sum['vegan'] += $review->rating;
+            }
+            if ($review->vegetarian) {
+                $score['vegetarian']++;
+                $sum['vegan'] += $review->rating;
+            }
+            if ($review->halal) {
+                $score['halal']++;
+                $sum['vegan'] += $review->rating;
+            }
+            if ($review->kosher) {
+                $score['kosher']++;
+                $sum['vegan'] += $review->rating;
+            }
+            if ($review->glutenFree) {
+                $score['glutenFree']++;
+                $sum['vegan'] += $review->rating;
+            }
+            if ($review->studentDiscount) {
+                $score['studentDiscount']++;
+                $sum['vegan'] += $review->rating;
+            }
+        }
+
+        $restaurant = Restaurant::find($restaurantId);
+        $restaurant->vegan = $score['vegan'] != 0 ? $sum['vegan'] / $score['vegan'] : 0;
+        $restaurant->vegetarian = $score['vegetarian'] != 0 ? $sum['vegetarian'] / $score['vegetarian'] : 0;
+        $restaurant->halal = $score['halal'] != 0 ? $sum['halal'] / $score['halal'] : 0;
+        $restaurant->kosher = $score['kosher'] != 0 ? $sum['kosher'] / $score['kosher'] : 0;
+        $restaurant->glutenFree = $score['glutenFree'] != 0 ? $sum['glutenFree'] / $score['glutenFree'] : 0;
+        $restaurant->studentDiscount = $score['studentDiscount'] != 0 ? $sum['studentDiscount'] / $score['studentDiscount'] : 0;
+        $restaurant->save();
     }
 }
 

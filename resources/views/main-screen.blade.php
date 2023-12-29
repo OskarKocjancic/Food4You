@@ -170,12 +170,12 @@
             </section>
 
 
-            <section class="p-3 col-9" id="restaurant-finder">
+            <section class="p-3 col-3" id="restaurant-finder">
                 <div class="col-12" id="search-bar">
                     <div class="input-group">
                         <input type="text" class="form-control" id="search-bar-input"
                             placeholder="Find a place to eat" aria-label="Find a place to eat"
-                            aria-describedby="button-addon2">
+                            aria-describedby="button-addon2" value="belvedur">
                     </div>
                 </div>
 
@@ -185,6 +185,9 @@
                 <div class="col-12 h-10 d-flex justify-content-start align-items-center gap-1 " id="pagination"></div>
             </section>
 
+            <section class="p-3 col-6">
+                <div id="map"></div>
+            </section>
         </div>
 
 
@@ -204,13 +207,46 @@
                     <label for="exampleFormControlTextarea1" class="form-label">Review</label>
                     <textarea class="form-control" name="text" rows="3"></textarea>
                 </div>
+
+                <div class="mb-3">
+                    <div for="exampleFormControlInput1" class="form-label">Avaiable options</div>
+                    <div class="input-group justify-content-between">
+
+
+                        <input type="checkbox" id="vegan" name="vegan" value="vegan">
+                        <i class="fas fa-leaf"></i>
+
+
+                        <input type="checkbox" id="vegetarian" name="vegetarian" value="vegetarian">
+                        <i class="fas fa-carrot"></i>
+
+
+                        <input type="checkbox" id="halal" name="halal" value="halal">
+                        <i class="fas fa-mosque"></i>
+
+
+                        <input type="checkbox" id="kosher" name="kosher" value="kosher">
+                        <i class="fas fa-star-of-david"></i>
+
+
+                        <input type="checkbox" id="gluten-free" name="gluten-free" value="gluten-free">
+                        <i class="fas fa-bread-slice"></i>
+
+
+                        <input type="checkbox" id="student-discount" name="student-discount" value="student-discount">
+                        <i class="fas fa-graduation-cap"></i>
+
+                    </div>
+
+                </div>
                 <div class="mb-3">
                     <label for="exampleFormControlInput1" class="form-label">Rating</label>
                     <input type="number" class="form-control" name="rating" placeholder="Rating">
                 </div>
+
+
                 <input type="hidden" name="id">
                 <div class="input-group">
-
                 </div>
                 <input class="btn btn-secondary" type="submit" value="Leave review">
             </form>
@@ -221,22 +257,108 @@
         <button id="close-button" class="btn btn-primary" onclick="this.parentNode.style.display = 'none'">Exit</button>
 
     </div>
-
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         const RESTAURANTS_PER_PAGE = 6;
-        
 
 
-        
+        async function accessOpenStreetMapsAPI(query) {
+            return fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=` +
+                    RESTAURANTS_PER_PAGE)
+                .then(response => response.json())
+                .then(data => Promise.all(data.map(restaurant => {
+                    let address = restaurant.display_name.split(",");
+                    let name = address[0];
+                    let street = address[2] + " " + address[1];
+                    let city = address[5];
+                    let country = address[7];
+                    restaurant.name = name;
+                    restaurant.street = street;
+                    restaurant.city = city;
+                    restaurant.country = country;
+                    restaurant.full_address = name + "," + street + "," + city + "," + country;
+                    console.log(restaurant.full_address);
+                    return fetch('/add-restaurant', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector(
+                                'meta[name="csrf-token"]').content
+                        },
+                        body: JSON.stringify({
+                            api_id: restaurant.osm_id,
+                            name: restaurant.name,
+                            address: restaurant.full_address,
+                        })
+                    }).then(response => response.json())
+                })))
+        }
+        async function getRestaurants(query, from = 0, to = RESTAURANTS_PER_PAGE) {
+            return await fetch('/get-restaurants', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        restaurantName: query,
+                        from: from,
+                        to: to,
+                        price1: document.querySelector("#price-1").checked,
+                        price2: document.querySelector("#price-2").checked,
+                        price3: document.querySelector("#price-3").checked,
+                        rating: document.querySelector("#rating").value,
+                        vegan: document.querySelector("#vegan").value,
+                        vegetarian: document.querySelector("#vegetarian").value,
+                        halal: document.querySelector("#halal").value,
+                        kosher: document.querySelector("#kosher").value,
+                        glutenFree: document.querySelector("#gluten-free").value,
+                        studentDiscount: document.querySelector("#student-discount").value,
+
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                    let restaurantsDiv = document.querySelector("#restaurants");
+                    restaurantsDiv.innerHTML = "";
+                    let i = 0;
+
+                    return data;
+                });
+
+
+
+        }
+
         function createRestaurantDiv(restaurant) {
-            document.createElement("div");
-            let restaurantDiv = document.createElement("div");
-            restaurantDiv.classList.add("restaurant-card");
-            restaurantDiv.innerHTML = `
-                            <div class="restaurant-name">${restaurant.name}</div>
-                            <div class="restaurant-score">${restaurant.rating}</div>
-                        `;
 
+            let restaurantsDiv = document.querySelector("#restaurants");
+            let restaurantDiv = document.createElement("div");
+            restaurantDiv.classList.add("card");
+            let restaurantBodyDiv = document.createElement("div");
+            restaurantBodyDiv.classList.add("card-body");
+            restaurantDiv.appendChild(restaurantBodyDiv);
+            // let address = restaurant.street + "," + restaurant.city + "," + restaurant.country;
+            restaurantBodyDiv.innerHTML = `
+                            <div class="restaurant-name">${restaurant.name}</div>
+                            <div class="restaurant-address">${restaurant.address}</div>
+                            `;
+
+            restaurantBodyDiv.innerHTML +=
+                `<div class="restaurant-scores d-flex flex-row justify-content-between align-content-center col-6">` +
+                `<div class="restaurant-rating"><i class="fas fa-star"></i> ${restaurant.rating}</div>` +
+                `<div class="restaurant-score-vegan"><i class="fas fa-leaf"></i> ${restaurant.vegan}</div>` +
+                `<div class="restaurant-score-vegetarian"><i class="fas fa-carrot"></i> ${restaurant.vegetarian}</div>` +
+                `<div class="restaurant-score-halal"><i class="fas fa-mosque"></i> ${restaurant.halal}</div>` +
+                `<div class="restaurant-score-kosher"><i class="fas fa-star-of-david"></i> ${restaurant.kosher}</div>` +
+                `<div class="restaurant-score-gluten-free"><i class="fas fa-bread-slice"></i> ${restaurant.glutenFree}</div>` +
+                `<div class="restaurant-score-student-discount"><i class="fas fa-graduation-cap"></i> ${restaurant.studentDiscount}</div>` +
+                `</div>`;
+
+
+            restaurantBodyDiv.innerHTML +=
+                `<input type="hidden" class="restaurant-api-id" value=${restaurant.api_id}>`;
             restaurantDiv.addEventListener("click", () => {
                 fetch('/get-reviews', {
                         method: 'POST',
@@ -247,12 +369,10 @@
                                 .content
                         },
                         body: JSON.stringify({
-                            id: restaurant.id,
+                            id: restaurant.id
                         })
                     }).then(response => response.json())
                     .then(data => {
-                        console.log(data);
-
 
                         let reviewOverlay = document.querySelector(
                             ".review-overlay");
@@ -261,19 +381,14 @@
                             "#review-card-container");
 
                         reviewsDiv.innerHTML = "";
-                        document.querySelector("input[name='id']").value =
-                            restaurant.id;
+                        document.querySelector("input[name='id']").value = restaurant.id;
 
                         data.forEach(review => {
 
-                            let reviewDiv = document.createElement(
-                                "div");
-                            reviewDiv.classList.add(
-                                "review-card");
+                            let reviewDiv = document.createElement("div");
+                            reviewDiv.classList.add("review-card");
 
-
-                            let userDiv = document.createElement(
-                                "div");
+                            let userDiv = document.createElement("div");
 
                             userDiv.classList.add("review-card-user");
                             userDiv.innerHTML = review.username;
@@ -310,52 +425,31 @@
                     })
 
             });
+
             return restaurantDiv;
-        }
-
-        async function getRestaurants(query, from = 0, to = RESTAURANTS_PER_PAGE) {
-            return await fetch('/get-restaurants', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        restaurantName: query,
-                        from: from,
-                        to: to,
-                        price1: document.querySelector("#price-1").checked,
-                        price2: document.querySelector("#price-2").checked,
-                        price3: document.querySelector("#price-3").checked,
-                        rating: document.querySelector("#rating").value,
-                        vegan: document.querySelector("#vegan").value,
-                        vegetarian: document.querySelector("#vegetarian").value,
-                        halal: document.querySelector("#halal").value,
-                        kosher: document.querySelector("#kosher").value,
-                        glutenFree: document.querySelector("#gluten-free").value,
-                        studentDiscount: document.querySelector("#student-discount").value,
-
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    let restaurantsDiv = document.querySelector("#restaurants");
-                    restaurantsDiv.innerHTML = "";
-                    let i = 0;
-                    data.forEach(restaurant => {
-                        if (to == -1 && i >= RESTAURANTS_PER_PAGE) return;
-                        let restaurantDiv = createRestaurantDiv(restaurant);
-                        restaurantsDiv.appendChild(restaurantDiv);
-                        i++;
-
-                    });
-                    return data;
-                });
-
-
 
         }
+
+        function displayOpenStreetMaps() {
+            // Create the map element
+            var mapElement = document.getElementById('map');
+            var map = L.map(mapElement).setView([51.505, -0.09], 13);
+
+            // Add the OpenStreetMap tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+                maxZoom: 18,
+            }).addTo(map);
+
+            // Add a marker to the map
+            L.marker([51.5, -0.09]).addTo(map)
+                .bindPopup('A marker on the map.')
+                .openPopup();
+        }
+
+        // Call the function to display the OpenStreetMaps widget
+        displayOpenStreetMaps();
+
 
         function generatePagination(numberOfRestaurants, restaurantsPerPage = RESTAURANTS_PER_PAGE) {
             let paginationDiv = document.querySelector("#pagination");
@@ -373,21 +467,39 @@
                 paginationDiv.appendChild(pageButton);
             }
         }
+        var loadedRestaurants = new Set();
 
 
-
-
+        let restaurantsDiv = document.querySelector("#restaurants");
         let searchBar = document.querySelector("#search-bar-input");
         let filters = document.querySelector("#filters");
         let filterButton = document.querySelector("#filter-apply-button");
         let topRated = document.querySelector("#top-rated");
-        filterButton.addEventListener("click", () => {
-            (async () => {
-                let restaurants = await getRestaurants(searchBar.value, 0, -1);
-                generatePagination(restaurants.length);
-            })();
-        });
+        filterButton.addEventListener("click",
+            () => {
+                Promise.all([
+                    accessOpenStreetMapsAPI("Slovenia restaurant " + searchBar.value),
+                    getRestaurants(searchBar.value)
+                ]).then(([openStreetMapsRestaurants, otherRestaurants]) => {
+
+                    loadedRestaurants = new Set();
+                    openStreetMapsRestaurants.forEach(restaurant => loadedRestaurants.add(restaurant));
+                    otherRestaurants.forEach(restaurant => {
+                        if (!openStreetMapsRestaurants.some(restaurant2 => restaurant2.id ==
+                                restaurant.id)) {
+                            loadedRestaurants.add(restaurant);
+                        }
+                    });
+
+                    restaurantsDiv.innerHTML = "";
+                    loadedRestaurants.forEach(async restaurant => document.querySelector("#restaurants")
+                        .appendChild(createRestaurantDiv(restaurant)));
+                    console.log(loadedRestaurants);
+                });
+            });
+
         searchBar.addEventListener("input", (e) => {
+
             if (searchBar.value == "") {
                 $("#filters").collapse("hide");
                 $("#top-rated").collapse("show");
@@ -395,10 +507,7 @@
                 document.querySelector("#pagination").innerHTML = "";
                 document.querySelector("#restaurants").innerHTML = "";
             } else {
-                (async () => {
-                    let restaurants = await getRestaurants(e.target.value, 0, -1);
-                    generatePagination(restaurants.length);
-                })();
+
                 $("#filters").collapse("show");
                 $("#top-rated").collapse("hide");
             }

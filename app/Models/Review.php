@@ -16,6 +16,13 @@ class Review extends Model
         'text',
         'title',
         'rating',
+        'vegan',
+        'vegetarian',
+        'halal',
+        'kosher',
+        'glutenFree',
+        'studentDiscount'
+        
     ];
 
     public function user()

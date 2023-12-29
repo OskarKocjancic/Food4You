@@ -18,6 +18,12 @@ return new class extends Migration {
             $table->string('text');
             $table->string('title');
             $table->float('rating', 2, 1);
+            $table->boolean('vegan');
+            $table->boolean('vegetarian');
+            $table->boolean('halal');
+            $table->boolean('kosher');
+            $table->boolean('glutenFree');
+            $table->boolean('studentDiscount');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('restaurant_id')->references('id')->on('restaurants')->onDelete('cascade');

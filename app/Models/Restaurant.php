@@ -10,6 +10,7 @@ class Restaurant extends Model
     use HasFactory;
     protected $table = "restaurants";
     protected $fillable = [
+        'api_id',
         'name',
         'address',
         'phone',

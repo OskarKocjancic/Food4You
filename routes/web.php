@@ -54,13 +54,20 @@ Route::post(
         'getResponseFromChatGPT'
     ]
 )->name('chat.post');
-Route::match(['get', 'post'], // Modify the route definition to support both POST and GET methods
+Route::match(['get', 'post'],
     '/add-review',
     [
         RestaurantController::class,
         'addReview'
     ]
 )->name('add-review.post');
+Route::match(['get', 'post'],
+    '/add-restaurant',
+    [
+        RestaurantController::class,
+        'addRestaurantIfAbsent'
+    ]
+)->name('add-restaurant.post');
 
 Route::post(
     '/get-restaurants',
@@ -79,6 +86,14 @@ Route::post(
         'getReviews'
     ]
 )->name('get-reviews.post');
+
+Route::post(
+    '/get-reviews-api',
+    [
+        RestaurantController::class,
+        'getReviewsApi'
+    ]
+)->name('get-reviews-api.post');
 
 Route::post(
     '/registration',
