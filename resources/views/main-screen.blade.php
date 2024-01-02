@@ -9,10 +9,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="{{ asset('OpenLayers.js') }}"></script>
 
-
-    <div class="container-fluid ">
-        <div class="row">
+    <div class="container-fluid h-100 d-flex flex-column">
+        <div class="row flex-grow-0 d-flex flex-row">
             <section class="p-3 col-12 collapse show" id="top-rated">
                 <div class="card">
                     <div class="card-body d-flex justify-content-between align-items-center">
@@ -70,8 +70,8 @@
 
             </section>
         </div>
-        <div class="row justify-content-center">
-            <section class="p-3 col-2 collapse" id="filters">
+        <div class="row flex-grow-1 d-flex flex-row justify-content-start">
+            <section class="col-2 collapse card p-3" id="filters">
                 <div class="filter mb-3">
                     <div class="filter-title">Price</div>
                     <div class="row filter-content ">
@@ -90,88 +90,97 @@
 
                     </div>
                 </div>
-
                 <div class="filter mb-3">
                     <div class="filter-title">Dietary requirements</div>
                     <div class="row filter-content ">
                         <div class="filter-content-item">
-                            <i class="fas fa-leaf" title="Vegan" data-toggle="tooltip"></i>
-                            <input type="range"
-                                oninput="document.querySelector('#vegan-value').innerHTML = '≥'+this.value" min="0"
-                                max="5" value="0" step="0.5" list="rating-ticks" id="vegan"
-                                name="vegan" value="vegan">
-                            <label id="vegan-value" for="vegan"></label>
+                            <div class="input-group gap-3 justify-content-between">
+                                <i class="fas fa-leaf" title="Vegan" data-toggle="tooltip"></i>
+                                <input class="flex-grow-1" type="range" min="0" max="5" value="0"
+                                    step="0.5" list="rating-ticks" id="vegan" name="vegan" value="vegan"
+                                    oninput="updateValue('vegan', 'vegan-value')">
+                                <label id="vegan-value" for="vegan">&GreaterEqual;0.0</label>
+                            </div>
                         </div>
                         <div class="filter-content-item">
-                            <i class="fas fa-carrot" title="Vegetarian" data-toggle="tooltip"></i>
-                            <input type="range"
-                                oninput="document.querySelector('#vegetarian-value').innerHTML = '≥'+this.value"
-                                min="0" max="5" value="0" step="0.5" list="rating-ticks"
-                                id="vegetarian" name="vegetarian" value="vegetarian">
-                            <label id="vegetarian-value" for="vegetarian"></label>
+                            <div class="input-group gap-3 justify-content-between">
+                                <i class="fas fa-carrot" title="Vegetarian" data-toggle="tooltip"></i>
+                                <input class="flex-grow-1" type="range" min="0" max="5" value="0"
+                                    step="0.5" list="rating-ticks" id="vegetarian" name="vegetarian"
+                                    value="vegetarian" oninput="updateValue('vegetarian', 'vegetarian-value')">
+                                <label id="vegetarian-value" for="vegetarian">&GreaterEqual;0.0</label>
+                            </div>
                         </div>
                         <div class="filter-content-item">
-                            <i class="fa-solid fa-star-and-crescent" title="Halal" data-toggle="tooltip"></i>
-                            <input type="range"
-                                oninput="document.querySelector('#halal-value').innerHTML = '≥'+this.value" min="0"
-                                max="5" value="0" step="0.5" list="rating-ticks" id="halal"
-                                name="halal" value="halal">
-                            <label id="halal-value" for="halal"></label>
+                            <div class="input-group gap-3 justify-content-between">
+                                <i class="fa-solid fa-star-and-crescent" title="Halal" data-toggle="tooltip"></i>
+                                <input class="flex-grow-1" type="range" min="0" max="5" value="0"
+                                    step="0.5" list="rating-ticks" id="halal" name="halal" value="halal"
+                                    oninput="updateValue('halal', 'halal-value')">
+                                <label id="halal-value" for="halal">&GreaterEqual;0.0</label>
+                            </div>
                         </div>
                         <div class="filter-content-item">
-                            <i class="fas fa-star-of-david" title="Kosher" data-toggle="tooltip"></i>
-                            <input type="range"
-                                oninput="document.querySelector('#kosher-value').innerHTML = '≥'+this.value"
-                                min="0" max="5" value="0" step="0.5" list="rating-ticks"
-                                id="kosher" name="kosher" value="kosher">
-                            <label id="kosher-value" for="kosher"></label>
+                            <div class="input-group gap-3 justify-content-between">
+                                <i class="fas fa-star-of-david" title="Kosher" data-toggle="tooltip"></i>
+                                <input class="flex-grow-1" type="range" min="0" max="5" value="0"
+                                    step="0.5" list="rating-ticks" id="kosher" name="kosher" value="kosher"
+                                    oninput="updateValue('kosher', 'kosher-value')">
+                                <label id="kosher-value" for="kosher">&GreaterEqual;0.0</label>
+                            </div>
                         </div>
                         <div class="filter-content-item">
-                            <i class="fas fa-bread-slice" title="Gluten-free" data-toggle="tooltip"></i>
-                            <input type="range"
-                                oninput="document.querySelector('#gluten-free-value').innerHTML = '≥'+this.value"
-                                min="0" max="5" value="0" step="0.5" list="rating-ticks"
-                                id="gluten-free" name="gluten-free" value="gluten-free">
-                            <label id="gluten-free-value" for="gluten-free"></label>
+                            <div class="input-group gap-3 justify-content-between">
+                                <i class="fas fa-bread-slice" title="Gluten-free" data-toggle="tooltip"></i>
+                                <input class="flex-grow-1" type="range" min="0" max="5" value="0"
+                                    step="0.5" list="rating-ticks" id="gluten-free" name="gluten-free"
+                                    value="gluten-free" oninput="updateValue('gluten-free', 'gluten-free-value')">
+                                <label id="gluten-free-value" for="gluten-free">&GreaterEqual;0.0</label>
+                            </div>
                         </div>
                         <span class="mb-3"></span>
                         <div class="filter-content-item">
-                            <i class="fa-solid fa-graduation-cap" title="Student discount" data-toggle="tooltip"></i>
-                            <input type="range"
-                                oninput="document.querySelector('#student-discount-value').innerHTML = '≥'+this.value"
-                                min="0" max="5" value="0" step="0.5" list="rating-ticks"
-                                id="student-discount" name="student-discount" value="student-discount">
-                            <label id="student-discount-value" for="student-discount"></label>
+                            <div class="input-group gap-3 justify-content-between">
+                                <i class="fa-solid fa-graduation-cap" title="Student discount" data-toggle="tooltip"></i>
+                                <input class="flex-grow-1" type="range" min="0" max="5" value="0"
+                                    step="0.5" list="rating-ticks" id="student-discount" name="student-discount"
+                                    value="student-discount"
+                                    oninput="updateValue('student-discount', 'student-discount-value')">
+                                <label id="student-discount-value" for="student-discount">&GreaterEqual;0.0</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter mb-3">
+                        <div class="filter-title">Rating</div>
+                        <div class="row filter-content">
+                            <div class="filter-content-item">
+                                <div class="input-group gap-3 justify-content-between">
+                                    <i class="fa-solid fa-star"></i>
+                                    <input class="flex-grow-1" oninput="updateValue('rating', 'rating-value')"
+                                        class="col-8"type="range" id="rating" name="rating" min="0"
+                                        max="5" value="0" step="0.5" list="rating-ticks">
+                                    <span class="col-2" id="rating-value">&GreaterEqual;0.0</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="filter mb-3">
-                    <div class="filter-title">Rating</div>
-                    <div class="row filter-content ">
-                        <div class="filter-content-item">
-                            <input oninput="document.querySelector('#rating-value').innerHTML = '≥'+this.value"
-                                class="col-8"type="range" id="rating" name="rating" min="0" max="5"
-                                value="0" step="0.5" list="rating-ticks">
-                            <datalist id="rating-ticks">
-                                <option value="1">
-                                <option value="2">
-                                <option value="3">
-                                <option value="4">
-                                <option value="5">
-                            </datalist>
-                            <span class="col-2" id="rating-value">&GreaterEqual;5</span>
-                        </div>
-                    </div>
-                </div>
                 <div class="filter">
                     <button id="filter-apply-button" class="btn btn-primary">Apply Filters</button>
                 </div>
+                <datalist id="rating-ticks">
+                    <option value="1">
+                    <option value="2">
+                    <option value="3">
+                    <option value="4">
+                    <option value="5">
+                </datalist>
             </section>
 
-
-            <section class="p-3 col-3" id="restaurant-finder">
-                <div class="col-12" id="search-bar">
+            <section class="p-3 col-12 col-3 p-3 d-flex flex-column" id="restaurant-finder">
+                <div class="col-12 mb-3" id="search-bar">
                     <div class="input-group">
                         <input type="text" class="form-control" id="search-bar-input"
                             placeholder="Find a place to eat" aria-label="Find a place to eat"
@@ -179,14 +188,13 @@
                     </div>
                 </div>
 
-                <div class="col-12 p-3 " id="restaurants">
-                </div>
+                <div class="col-12 p-1 " id="restaurants"></div>
 
                 <div class="col-12 h-10 d-flex justify-content-start align-items-center gap-1 " id="pagination"></div>
             </section>
 
-            <section class="p-3 col-6">
-                <div id="map"></div>
+            <section id="map" tabindex="2"
+                class="col-7 h-100 leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"                >
             </section>
         </div>
 
@@ -210,7 +218,7 @@
 
                 <div class="mb-3">
                     <div for="exampleFormControlInput1" class="form-label">Avaiable options</div>
-                    <div class="input-group justify-content-between">
+                    <div class="input-group justify-content-start gap-3">
 
 
                         <input type="checkbox" id="vegan" name="vegan" value="vegan">
@@ -259,14 +267,12 @@
     </div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        const RESTAURANTS_PER_PAGE = 6;
-
-
         async function accessOpenStreetMapsAPI(query) {
             return fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=` +
                     RESTAURANTS_PER_PAGE)
                 .then(response => response.json())
                 .then(data => Promise.all(data.map(restaurant => {
+                    console.log(restaurant);
                     let address = restaurant.display_name.split(",");
                     let name = address[0];
                     let street = address[2] + " " + address[1];
@@ -329,6 +335,18 @@
 
 
 
+        }
+
+        function updateValue(inputId, labelId) {
+            const input = document.querySelector(`#${inputId}`);
+            const label = document.querySelector(`#${labelId}`);
+            label.innerHTML = `&GreaterEqual;${Number(input.value).toFixed(1)}`;
+
+            if (Number(input.value) === 0) {
+                label.parentNode.style.opacity = 0.5;
+            } else {
+                label.parentNode.style.opacity = 1;
+            }
         }
 
         function createRestaurantDiv(restaurant) {
@@ -430,25 +448,35 @@
 
         }
 
-        function displayOpenStreetMaps() {
-            // Create the map element
-            var mapElement = document.getElementById('map');
-            var map = L.map(mapElement).setView([51.505, -0.09], 13);
+        function generateMap() {
+            let out = new OpenLayers.Map({
+                div: "map",
+                layers: [
+                    new OpenLayers.Layer.OSM("OSM (without buffer)"),
+                    new OpenLayers.Layer.OSM("OSM (with buffer)", null, {
+                        buffer: 2
+                    })
+                ],
 
-            // Add the OpenStreetMap tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
-                maxZoom: 18,
-            }).addTo(map);
+                // controls: [
+                //     new OpenLayers.Control.Navigation({
+                //         dragPanOptions: {
+                //             enableKinetic: true
+                //         }
+                //     }),
+                //     new OpenLayers.Control.PanZoom(),
+                //     new OpenLayers.Control.Attribution()
+                // ],
+                center: [
+                    1613827.574223, 5787449.0801955
+                ],
+                zoom: 14
+            });
 
-            // Add a marker to the map
-            L.marker([51.5, -0.09]).addTo(map)
-                .bindPopup('A marker on the map.')
-                .openPopup();
+            document.querySelector("#map").style.display = "none";
+            return out;
         }
 
-        // Call the function to display the OpenStreetMaps widget
-        displayOpenStreetMaps();
 
 
         function generatePagination(numberOfRestaurants, restaurantsPerPage = RESTAURANTS_PER_PAGE) {
@@ -467,10 +495,13 @@
                 paginationDiv.appendChild(pageButton);
             }
         }
+        const RESTAURANTS_PER_PAGE = 6;
+        var openstreetmap = generateMap();
         var loadedRestaurants = new Set();
 
-
         let restaurantsDiv = document.querySelector("#restaurants");
+        let paginationDiv = document.querySelector("#pagination");
+        let restaurantFinderDiv = document.querySelector("#restaurant-finder");
         let searchBar = document.querySelector("#search-bar-input");
         let filters = document.querySelector("#filters");
         let filterButton = document.querySelector("#filter-apply-button");
@@ -498,18 +529,33 @@
                 });
             });
 
+
+
         searchBar.addEventListener("input", (e) => {
-
+            //TODO: fix this animation
             if (searchBar.value == "") {
-                $("#filters").collapse("hide");
-                $("#top-rated").collapse("show");
+                $("#filters").animate({
+                    height: 'hide'
+                }, 150);
+                $("#top-rated").animate({
+                    height: 'show'
+                }, 150);
+                $("#map").fadeOut(50, () => {
+                    restaurantFinderDiv.classList.add("col-12");
+                });
 
-                document.querySelector("#pagination").innerHTML = "";
-                document.querySelector("#restaurants").innerHTML = "";
+                paginationDiv.innerHTML = "";
+                restaurantsDiv.innerHTML = "";
             } else {
-
-                $("#filters").collapse("show");
-                $("#top-rated").collapse("hide");
+                $("#filters").animate({
+                    height: 'show'
+                }, 150);
+                $("#top-rated").animate({
+                    height: 'hide'
+                }, 150);
+                $("#map").fadeIn(50, () => {
+                    restaurantFinderDiv.classList.remove("col-12");
+                });
             }
         });
     </script>
