@@ -10,21 +10,28 @@ section {
     background-color: #f2f2f2;
 }
 
+.card-body {
+    cursor: pointer;
+}
+
 .filter-content-item>.input-group {
     opacity: 0.5;
 }
 
-#map {
-    /* height: 100%;
-    width: 100%; */
-    /* position: absolute;
-    top: 0;
-    left: 0;
-    background-color: hotpink;
-    z-index: -1; */
-
+.greyed-out {
+    opacity: 0.5;
 }
 
+.restaurant-scores>div {
+    width: 13%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.restaurant-price{
+    flex-direction: row !important;
+}
 #restaurants {
     max-height: 74vh;
     flex: 1;
@@ -59,4 +66,75 @@ section {
 .review-card {
     background-color: #fff;
     margin-bottom: 1rem;
+}
+
+.login-badge{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+
+}
+.login-badge a{
+    color: #fff;
+    text-decoration: none;
+}
+#map {
+}
+/* loading div */
+
+.loader {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.loader-wheel {
+    animation: spin 1s infinite linear;
+    border: 5px solid rgba(30, 30, 30, 0.5);
+    border-left: 4px solid #fff;
+    border-radius: 50%;
+    height: 50px;
+    margin-bottom: 10px;
+    width: 50px;
+}
+
+.loader-text {
+    font-family: arial, sans-serif;
+    width: 4rem;
+}
+
+.loader-text:after {
+    content: 'Loading';
+    animation: load 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load {
+    0% {
+        content: 'Loading';
+    }
+
+    33% {
+        content: 'Loading.';
+    }
+
+    67% {
+        content: 'Loading..';
+    }
+
+    100% {
+        content: 'Loading...';
+    }
 }

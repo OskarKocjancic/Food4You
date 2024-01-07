@@ -13,7 +13,7 @@ class CreateRestaurantsTable extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('api_id');
+            $table->unsignedBigInteger('api_id');
             $table->timestamps();
             $table->string('name');
             $table->string('address');
@@ -26,6 +26,8 @@ class CreateRestaurantsTable extends Migration
             $table->float('kosher');
             $table->float('glutenFree');
             $table->float('studentDiscount');
+            $table->double('lon');
+            $table->double('lat');
         });
     }
 

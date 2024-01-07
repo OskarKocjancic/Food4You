@@ -15,6 +15,7 @@ class Review extends Model
         'restaurant_id',
         'text',
         'title',
+        'price',
         'rating',
         'vegan',
         'vegetarian',

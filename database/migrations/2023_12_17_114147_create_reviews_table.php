@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('text');
             $table->string('title');
             $table->float('rating', 2, 1);
+            $table->integer('price');
             $table->boolean('vegan');
             $table->boolean('vegetarian');
             $table->boolean('halal');

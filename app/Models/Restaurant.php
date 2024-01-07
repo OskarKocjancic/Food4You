@@ -21,7 +21,9 @@ class Restaurant extends Model
         'halal',
         'kosher',
         'glutenFree',
-        'studentDiscount'
+        'studentDiscount',
+        'lon',
+        'lat'
     ];
     public function reviews()
     {

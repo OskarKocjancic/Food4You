@@ -54,14 +54,16 @@ Route::post(
         'getResponseFromChatGPT'
     ]
 )->name('chat.post');
-Route::match(['get', 'post'],
+Route::match(
+    ['get', 'post'],
     '/add-review',
     [
         RestaurantController::class,
         'addReview'
     ]
 )->name('add-review.post');
-Route::match(['get', 'post'],
+Route::match(
+    ['get', 'post'],
     '/add-restaurant',
     [
         RestaurantController::class,
@@ -86,6 +88,23 @@ Route::post(
         'getReviews'
     ]
 )->name('get-reviews.post');
+
+Route::post(
+    '/get-best',
+    [
+        RestaurantController::class,
+        'getBestRatedRestaurants'
+    ]
+)->name('get-best.post');
+
+Route::post(
+    '/get-top-restaurants',
+    [
+        RestaurantController::class,
+        'getTopRestaurants'
+    ]
+
+)->name('get-top-restaurants.post');
 
 Route::post(
     '/get-reviews-api',
